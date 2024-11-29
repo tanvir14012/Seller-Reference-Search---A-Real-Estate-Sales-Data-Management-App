@@ -1,0 +1,189 @@
+﻿1. sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+2. sudo nginx -t
+3. sudo ufw allow 'Nginx Full'
+4. sudo systemctl restart nginx
+5. sudo tail -f /var/log/nginx/error.log
+5. sudo tail -f /var/log/nginx/access.log
+
+package: 
+
+sudo apt update
+
+
+
+delete nginx config: 
+1. sudo rm /etc/nginx/sites-available/nginx-seller-reference-search.conf
+2. sudo rm /tmp/nginx-seller-reference-search.conf 
+3. sudo rm /etc/nginx/sites-enabled/nginx-seller-reference-search.conf
+ 
+
+
+Run: 
+1. cd /var/www/seller-reference-search
+2. dotnet "Seller Reference Search.dll"
+
+
+Uninstall nginx:
+
+sudo systemctl stop nginx
+sudo apt purge nginx nginx-common nginx-core -y
+sudo rm -rf /etc/nginx /var/www/html /var/log/nginx
+sudo apt autoremove -y
+
+# The app's 'publish' folder is copied to: /var/www/seller-reference-search on Ubuntu.
+Service File (to configure the app to run as a background service, it's mandatory.):
+
+1. sudo nano /etc/systemd/system/seller-reference-search.service
+2. 
+	[Unit]
+	Description= Seller Reference Search
+
+	[Service]
+	WorkingDirectory=/var/www/seller-reference-search
+	ExecStart=/usr/bin/dotnet /var/www/seller-reference-search/"Seller Reference Search.dll"
+	Restart=always
+	# Restart service after 10 seconds if the dotnet service crashes:
+	RestartSec=10
+	KillSignal=SIGINT
+	SyslogIdentifier=dotnet-example
+	User=www-data
+	Environment=ASPNETCORE_ENVIRONMENT=Production
+	Environment=DOTNET_NOLOGO=true
+	Environment=ConnectionStrings__DefaultConnection=Host=localhost;Port=5432;Database=seller_reference_search;Username=<db username>;Password=<your password>
+
+	[Install]
+	WantedBy=multi-user.target
+
+3. sudo systemctl enable seller-reference-search.service
+4. sudo systemctl start seller-reference-search.service
+5. sudo systemctl status seller-reference-search.service
+6. sudo systemctl daemon-reload
+7. sudo journalctl -u seller-reference-search -b
+8. sudo systemctl stop seller-reference-search.service
+
+systemd escapes:
+1. sudo systemd-escape https://localhost:5001 https:--localhost:5001
+   suso systemd-escape http://localhost:5000 http:--localhost:5000
+   
+2. sudo systemd-escape https://127.0.0.1:5001 https:--127.0.0.1:5001   
+   suso systemd-escape http://127.0.0.1:5000 http:--127.0.0.1:5000
+   
+Diagnosis:
+
+sudo journalctl -u seller-reference-search.service -b
+
+
+SSL free:
+1. sudo apt install certbot python3-certbot-nginx
+2. sudo certbot --nginx -d cartergraceplatform.com -d www.cartergraceplatform.com
+3. sudo nano /etc/nginx/sites-enabled/default
+4. sudo openssl pkcs12 -export -out /etc/letsencrypt/live/cartergraceplatform.com/cartergraceplatform.pfx -inkey /etc/letsencrypt/live/cartergraceplatform.com/privkey.pem -in /etc/letsencrypt/live/cartergraceplatform.com/fullchain.pem -certfile /etc/letsencrypt/live/cartergraceplatform.com/fullchain.pem
+
+SSL paid:
+1. openssl req -new -newkey rsa:2048 -nodes -keyout /etc/ssl/private/cartergraceplatform.key -out /etc/ssl/certs/cartergraceplatform.csr
+2. sudo nano /etc/ssl/certs/cartergraceplatform.csr
+3. sudo nano /etc/nginx/conf.d/cartergraceplatform-ssl.conf
+
+server {
+
+listen 443 ssl;
+
+ssl_certificate /etc/positivessl/cartergraceplatform_com_chain.crt;
+
+ssl_certificate_key /etc/positivessl/cartergraceplatform.key;
+
+ssl_dhparam /etc/positivessl/dhparam.pem;
+
+root /var/www/seller-reference-search/wwwroot;
+
+server_name cartergraceplatform.com www.cartergraceplatform.com;
+
+}
+
+4. sudo mv /etc/ssl/private/cartergraceplatform.key /etc/positivessl
+
+5. sudo cat cartergraceplatform_com.crt > cartergraceplatform_com_chain.crt ; echo >> cartergraceplatform_com_chain.crt ; cat cartergraceplatform_com.ca-bundle >> cartergraceplatform_com_chain.crt
+
+6. sudo openssl dhparam -out /etc/positivessl/dhparam.pem 2048;
+
+7.
+	ssl_protocols TLSv1.2 TLSv1.3;
+	
+    ssl_prefer_server_ciphers on;
+
+    ssl_ciphers 'ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256';
+	
+
+
+copy fiels:
+
+1. sudo rsync -av /tmp/www/ /var/www/
+2. sudo mv -T /tmp/www /var/www
+3. sudo rm -rf /var/www
+4. sudo du -sh --block-size=MB /var/www
+5. sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+6. sudo lsof -i :5000
+7. sudo kill 1234
+
+
+run:
+
+1. cd /var/www/seller-reference-search
+2. sudo dotnet "Seller Reference Search.dll"
+
+
+Linux file name issues:
+----------------------
+File names are case-sensitive in linux. Since, URLs are lowercased some js files
+do not match the path and returns 404 eg. dataTables.min.js
+
+Use the following command on wwwroot after deployment on Ubuntu to make all filer and folder names lowercase:
+
+1. sudo apt-get install rename
+2. cd /var/www/seller-reference-database/wwwroot
+3. find . -depth -exec rename 's/(.*)\/([^\/]*)/$1\/\L$2/' {} +
+
+
+
+postgres:
+
+1. sudo -i -u postgres
+2. psql -d seller_reference_search
+3. or you cand do: psql
+4. list dbs: \l
+5. copy db name and : \connect seller_reference_search
+6. \q
+
+
+File permissions:
+1. sudo chown -R www-data:www-data /var/www/seller-reference-search
+2. sudo chmod -R 755 /var/www/seller-reference-search
+
+Allow firewell:
+1. sudo ufw allow 80/tcp
+2. sudo ufw allow 443/tcp
+3. sudo iptables -L
+4. sudo ufw status
+5. nslookup yourdomain.com
+6. curl -v http://localhost:5000
+7.
+
+
+
+
+
+Common file operations on Ubuntu:
+1. Rename: sudo mv /var/www/seller-reference-search/wwwroot/{old_name} /var/www/seller-reference-search/wwwroot/{new_name}
+2. Get encoding: file -i filename.txt
+3. Convert encoding: iconv -f ISO-8859-1 -t UTF-8 oldfile.txt -o newfile.txt
+4. 
+
+
+Backup site:
+1. sudo mkdir /var/srs_backups
+2. sudo chown ubuntu:ubuntu /var/srs_backups
+3. sudo chmod 700 /var/srs_backups
+4. ls -l
+5. cd /var/srs_backups
+6. mkdir backup_$(date +"%Y-%m-%d_%H-%M-%S")
+7. sudo cp -r /var/www .

@@ -1,0 +1,145 @@
+html {
+  font-size: 16px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #f8f9fa;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  font-family: Corbel, sans-serif;
+}
+
+/* Button outline customization */
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #f8f9fa;
+}
+
+/*Fix thead dropdown overflow*/
+header > nav .dropdown-menu.show {
+    min-width: 5rem;
+}
+
+header > nav ul.navbar-nav li,
+header > nav div.dropdown-wrapper .dropdown {
+    border-radius: 0.5rem;
+}
+
+header > nav div.dropdown-wrapper .dropdown {
+    padding-left: 0.25rem;
+}
+
+header > nav ul.navbar-nav li:hover,
+header > nav div.dropdown-wrapper .dropdown:hover,
+header > nav div.dropdown-wrapper .dropdown button[type=submit]:hover {
+    background-color: #f8f9fa;
+}
+
+@media screen and (max-width: 576px) {
+    header > nav div.dropdown-wrapper:hover {
+        background-color: #f8f9fa;
+    }
+
+    header > nav div.dropdown-wrapper {
+        border-radius: 0.5rem;
+    }
+}
+
+.cursor-pointer {
+   cursor: pointer;
+   -webkit-cursor: pointer; /* Older versions of Safari */
+   -moz-cursor: pointer; /* Older versions of Firefox */
+}
+
+
+.cursor-default {
+    cursor: default;
+    -webkit-cursor: default; /* Older versions of Safari */
+    -moz-cursor: default; /* Older versions of Firefox */
+}
+
+.rounded-1rem {
+   -webkit-border-radius: 1rem; /* Safari and older versions of Chrome */
+   -moz-border-radius: 1rem; /* Firefox */
+   border-radius: 1rem; /* Standard */
+}
+
+.bg-purple {
+    background-color: #7358E0;
+}
+
+#login-btn:hover, #login-btn:focus, #login-btn:active:focus {
+    background-color: #674fd5 !important;
+    box-shadow: none !important;
+}
+
+.min-w-search-dropdown{
+    min-width: 125px;
+}
+
+
+#slider_wrapper input {
+    width: 75%;
+    outline: none;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    #slider_wrapper input {
+        width:120%;
+        font-size: 0.69rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    #slider_wrapper input {
+        width: 285px !important;
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 992px) {
+    #slider_wrapper input {
+        width: 185px;
+    }
+}
+
+.invisible-input {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background-color: transparent; /* This makes the background transparent */
+}
+
+.invisible-input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.invisible-input:hover {
+    background-color: transparent; /* Preserve transparent background on hover */
+}
+
+
+.state-selection {
+    width: 100%
+}
+
+@media (min-width: 768px) {
+    .state-selection {
+        width: 79px;
+    }
+}

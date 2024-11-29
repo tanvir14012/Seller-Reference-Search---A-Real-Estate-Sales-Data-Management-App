@@ -1,0 +1,72 @@
+﻿
+@model Login
+@{
+    ViewData["Title"] = "Login";
+}
+
+@inject SignInManager<AppUser> signInManager
+
+@if(!signInManager.IsSignedIn(User))
+{
+    <div class="container bg-light position-fixed w-100 h-100 p-0 m-0">
+        <div class="row justify-content-center align-content-center h-100 w-100">
+            <div class="col-10 col-md-8 col-lg-6 col-xxl-4 border rounded-1rem shadow-sm bg-white p-4 p-sm-5">
+                <div class="pb-2">
+                    @* <i class="fas fa-sign-in-alt text-muted"></i> *@
+                    <img class="img-fluid" src="~/logo.png"/>
+                </div>
+                <h4 class="fw-bolder">Log in</h4>
+                <form method="post" class="form" asp-controller="Account" asp-action="Login">
+                    @Html.AntiForgeryToken()
+                    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                    <div class="form-group">
+                        <label class="form-label" asp-for="Email"></label>
+                        <input asp-for="Email" type="text" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group position-relative mt-3">
+                        <label class="form-label" asp-for="Password"></label>
+                        <div>
+                            <i class="fas fa-eye text-secondary position-absolute m-2 pt-1 end-0 cursor-pointer"></i>
+                            <input asp-for="Password" type="password" class="form-control" />
+                            <small class="text-muted">Password must include uppercase, lowercase, digit, special character, and be 5+ characters.</small>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label asp-for="RememberMe">
+                            <input asp-for="RememberMe" type="checkbox" class="form-check-inline">
+                            <span class="form-check-label">@Html.DisplayNameFor(obj => obj.RememberMe)</span>
+                        </label>
+                    </div>
+                    <div class="form-group mt-3">
+                        <button id="login-btn" type="submit" class="btn w-100 bg-purple text-white">Log in</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    @section Scripts {
+    <script>
+        $(function () {
+            $("div i").on("click", function (evt) {
+                const target = $(evt.currentTarget);
+                const inputField = target.siblings("input");
+
+                if (target.hasClass("fa-eye")) {
+                    target.removeClass("fa-eye").addClass("fa-eye-slash");
+                    inputField.attr("type", "text");
+                } else if (target.hasClass("fa-eye-slash")) {
+                    target.removeClass("fa-eye-slash").addClass("fa-eye");
+                    inputField.attr("type", "password");
+                }
+            });
+
+            //Clear custom settigns from localstorage
+            clearState();
+        });
+
+    </script>
+    }
+}

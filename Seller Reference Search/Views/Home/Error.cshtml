@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Error";
+}
+
+<h1 class="text-danger">Error</h1>
+<h2 class="text-danger">An error occurred while processing your request.</h2>
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div>
+        <p class="text-danger">@ViewData["ErrorMessage"]</p>
+    </div>
+}
+
+<p>Sorry for the inconvenience. Please try again later.</p>

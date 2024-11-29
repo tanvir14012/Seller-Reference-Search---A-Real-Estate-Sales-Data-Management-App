@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/datatables.net-bs5/datatables.bootstrap5.min.css" rel="stylesheet" />
+    <link href="~/lib/datatables.net-buttons-bs5/buttons.bootstrap5.min.css" rel="stylesheet" />
+    <link href="~/lib/datatables.net-fixedcolumns-bs5/fixedcolumns.bootstrap5.min.css" rel="stylesheet" />
+    <link href="~/lib/datatables.net-select-bs5/select.bootstrap5.min.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="~/css/custom_dt_modifications.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @RenderSection("Styles", required: false)
+</head>
+<body class="bg-light">
+    <header>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                <div class="container-fluid">
+                    <a class="navbar-brand text-black" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img class="" src="~/logo.png" width="100" height="40" />
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item me-lg-2">
+                                <a class="nav-link text-black" asp-area="" asp-controller="Home" asp-action="Index">
+                                   @*  <i class="fas fa-search pe-1 pe-lg-2"></i> *@
+                                    <span>Search</span>
+                                </a>
+                            </li>
+                            <li class="nav-item me-lg-2">
+                                <a class="nav-link text-black" asp-area="" asp-controller="Upload" asp-action="Index">
+                                    @* <i class="fas fa-file-upload pe-1 pe-lg-2"></i> *@
+                                    <span>Upload</span>
+                                </a>
+                            </li>
+                            @if(User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-black" asp-area="" asp-controller="Team" asp-action="Index">
+                                        @* <i class="fas fa-users pe-1 pe-lg-2"></i> *@
+                                        <span>Team</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                        <div class="flex-grow-1 d-flex justify-content-start justify-content-lg-end dropdown-wrapper">
+                            <div class="dropdown">
+                                <a class="dropdown-toggle nav-link text-black text-break ps-0 ps-md-2" role="button" data-bs-toggle="dropdown" href="#">
+                                    <i class="fas fa-user"></i>
+                                    <span class="d-inline-block ps-1 ps-lg-2">Hello, @User.Identity.Name</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="px-2">
+                                        <form method="post" action="/logout">
+                                            @Html.AntiForgeryToken()
+                                            <input name="returnUrl" value="/" type="hidden" />
+                                            <button type="submit" class="btn btn-sm btn-light rounded-1">
+                                                <i class="fas fa-sign-out pe-1 pe-lg-2 text-muted"></i>
+                                                <span>Log out</span>
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </nav>
+            
+        }
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <footer class="border-top footer text-muted">
+            <div class="container text-center">
+                &copy; 2024 - Carter Grace Capital
+            </div>
+        </footer>
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/datatables.net/datatables.min.js"></script>
+    <script src="~/lib/datatables.net-bs5/datatables.bootstrap5.min.js"></script>
+    <script src="~/lib/datatables-responsive/datatables.responsive.min.js"></script>
+    <script src="~/lib/datatables.net-responsive-bs5/responsive.bootstrap5.min.js"></script>
+    <script src="~/lib/datatables-buttons/js/datatables.buttons.min.js"></script>
+    <script src="~/lib/datatables.net-buttons-bs5/buttons.bootstrap5.min.js"></script>
+    <script src="~/lib/jszip/jszip.min.js"></script>
+    <script src="~/lib/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/lib/pdfmake/pdfmake.min.js"></script>
+    <script src="~/lib/pdfmake/vfs_fonts.min.js"></script>
+    <script src="~/lib/datatables-buttons/js/buttons.colvis.min.js"></script>
+    <script src="~/lib/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/lib/datatables.net-fixedcolumns/datatables.fixedcolumns.min.js"></script>
+    <script src="~/lib/datatables.net-fixedcolumns-bs5/fixedcolumns.bootstrap5.min.js"></script>
+    <script src="~/lib/datatables.net-select/datatables.select.min.js"></script>
+    <script src="~/lib/datatables.net-select-bs5/select.bootstrap5.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

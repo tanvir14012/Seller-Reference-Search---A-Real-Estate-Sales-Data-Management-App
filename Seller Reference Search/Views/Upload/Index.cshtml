@@ -1,0 +1,96 @@
+﻿@model FileUploadDto
+@{
+    ViewData["Title"] = "Uploads";
+}
+
+
+<div class="card shadow-sm" id="agentsRoot">
+    <script type="text/javascript">
+        window.isAdmin = '@Html.Raw(@ViewData["isAdmin"])';
+    </script>
+    <div class="card-header fw-light bg-light ">
+        <div class="d-flex justify-content-between">
+            <h3 class="mt-1">Upload spreadsheets</h3>
+        </div>
+        <div id="agentFormWrapper">
+               <div class="border rounded bg-white shadow-sm my-4">
+                <div class="row m-2">
+                    @if(!string.IsNullOrEmpty(Model.Message))
+                    {
+                        <div class="alert @(Model.Errored ? "alert-danger": "alert-success") alert-dismissible fade show" role="alert">
+                            <strong>@Model.Message</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>  
+                    }   
+                </div>
+                <form method="post" class="row m-2 fw-normal" enctype="multipart/form-data" asp-controller="Upload" asp-action="Index" id="uploadForm">
+                    @Html.AntiForgeryToken()
+                    <div class="d-flex text-danger" asp-validation-summary="ModelOnly">
+                    </div>
+                    <div class="col-12 my-3">
+                        <div class="row form-group">
+                            <label class="col-3 col-form-label" asp-for="File"></label>
+                            <div class="col-9 form-group">
+                                <input type="file" class="form-control" accept=".xlsx, .xls" asp-for="File" />
+                                <small class="text-muted d-block">Max.file size is 5 MB, supported file extensions are: .xlsx and .xls</small>
+                                <span class="text-danger" asp-validation-for="File"></span>
+                            </div>
+                        </div>
+                        @* <div class="row">
+                            <select class="selectpicker">
+                                <option>Mustard</option>
+                                <option>Ketchup</option>
+                                <option>Barbecue</option>
+                            </select>
+
+                        </div> *@
+                    </div>
+                    <div class="row m-2">
+                        <ul class="list-group list-group-horizontal list-group-flush justify-content-center">
+                            <li class="list-group-item border-0">
+                                <button type="submit" class="btn btn-sm btn-light border rounded action-btn">
+                                    <i class="fas fa-save text-info"></i>
+                                    <span class="ps-1">Upload</span>
+                                </button>
+                            </li>
+                            <li class="list-group-item border-0">
+                                <button type="button" onclick="clearForm()" class="btn btn-sm btn-light border rounded action-btn"
+                                        id="cancelBtn">
+                                    <i class="fas fa-refresh text-danger"></i>
+                                    <span class="ps-1">Reset</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div> 
+        </div>
+    </div>
+    <div class="card-body">
+
+        <table id="agents" class="table table-striped table-hover w-100">
+            <thead>
+                <tr>
+                    <th>File name</th>
+                    <th>Status</th>
+                    <th>Description</th>
+                    <th>Time created</th>
+                    @if((bool?)ViewData["isAdmin"] == true)
+                    {
+                        <th>Action</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/upload.js"></script>
+
+}

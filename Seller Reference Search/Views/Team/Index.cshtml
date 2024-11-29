@@ -1,0 +1,119 @@
+﻿@model AppUserDto
+@{
+    ViewData["Title"] = "Team";
+}
+
+<div class="card shadow-sm" id="agentsRoot">
+    <div class="card-header fw-light bg-light ">
+        <div class="d-flex justify-content-between">
+            <h3 class="mt-1">App users</h3>
+            <div class="mt-2">
+                <button type="button" class="btn btn-sm border rounded action-btn" data-bs-toggle="collapse" data-bs-target="#agentFormWrapper" id="addBtn">
+                    <i class="fas fa-plus text-info"></i>
+                    <span class="ps-1">Add</span>
+                </button>
+            </div>
+        </div>
+        <div class="collapse" id="agentFormWrapper">
+               <div class="border rounded bg-white shadow-sm my-4">
+                <form method="post" class="row m-2 fw-normal" asp-controller="Team" asp-action="SaveUser" id="agentForm">
+                    @Html.AntiForgeryToken()
+                    <input name="Id" type="hidden" value="0"/>
+                    <div class="d-flex text-danger" asp-validation-summary="ModelOnly">
+                    </div>
+                    <div class="col-md-6 my-3">
+                        <div class="row">
+                            <label class="col-4 col-form-label" asp-for="FirstName"></label>
+                            <div class="col-8 form-group">
+                                <input class="form-control" asp-for="FirstName" />
+                                <span class="text-danger" asp-validation-for="FirstName"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 my-3">
+                        <div class="row">
+                            <label class="col-4 col-form-label" asp-for="LastName"></label>
+                            <div class="col-8 form-group">
+                                <input class="form-control" asp-for="LastName" />
+                                <span class="text-danger" asp-validation-for="LastName"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 my-3">
+                        <div class="row">
+                            <label class="col-4 col-form-label" asp-for="Email"></label>
+                            <div class="col-8 form-group">
+                                <input class="form-control" asp-for="Email" />
+                                <span class="text-danger" asp-validation-for="Email"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 my-3">
+                        <div class="row">
+                            <label class="col-4 col-form-label" asp-for="Password"></label>
+                            <div class="col-8 form-group position-relative">
+                                <i class="fas fa-eye text-secondary position-absolute m-2 pt-1 pe-3 end-0 cursor-pointer"></i>
+                                <input id="pass" type="password" class="form-control" asp-for="Password" />
+                                <small class="text-muted d-block">Password must include uppercase, lowercase, digit, special character, and be 5+ characters.</small>
+                                <span class="text-danger" asp-validation-for="Password"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 my-3">
+                        <div class="row">
+                            <label class="col-4 col-form-label" asp-for="ConfirmPassword"></label>
+                            <div class="col-8 form-group position-relative">
+                                <i class="fas fa-eye text-secondary position-absolute m-2 pt-1 pe-3 end-0 cursor-pointer"></i>
+                                <input id="confirmPass" type="password" class="form-control" asp-for="ConfirmPassword" />
+                                <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
+                                <span id="confirmPassErrMsg" class="text-danger invisible">Passwords must match</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="row m-2">
+                    <ul class="list-group list-group-horizontal list-group-flush justify-content-center">
+                        <li class="list-group-item border-0">
+                            <button type="button" class="btn btn-sm btn-light border rounded action-btn" id="saveBtn">
+                                <i class="fas fa-save text-info"></i>
+                                <span class="ps-1">Save</span>
+                            </button>
+                        </li>
+                        <li class="list-group-item border-0">
+                            <button type="button" class="btn btn-sm btn-light border rounded action-btn"
+                                    data-bs-toggle="collapse" data-bs-target="#agentFormWrapper" id="cancelBtn">
+                                <i class="fas fa-cancel text-danger"></i>
+                                <span class="ps-1">Cancel</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div> 
+        </div>
+    </div>
+    <div class="card-body">
+
+        <table id="agents" class="table table-striped table-hover w-100">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Email address</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/team.js"></script>
+}
